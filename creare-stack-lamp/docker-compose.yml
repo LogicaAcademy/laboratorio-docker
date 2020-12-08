@@ -1,0 +1,37 @@
+version: "3"
+services:
+  webapp:
+    restart: always
+    build:
+      context: ./webapp/.
+    ports:
+      - "8090:80"    
+    links:
+      - datastore
+    networks:
+      - backend
+      - frontend
+
+  datastore:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql-root
+      MYSQL_USER_FILE: /run/secrets/mysql-user
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql-password
+      MYSQL_DATABASE : myschema
+    networks:
+      - backend      
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ${PWD}/secrets:/run/secrets
+      - ${PWD}/data/initdb/master:/docker-entrypoint-initdb.d
+
+volumes:
+  dbdata:
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
