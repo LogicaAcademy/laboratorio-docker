@@ -25,13 +25,11 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
       - ${PWD}/secrets:/run/secrets
-      - ${PWD}/data/initdb/master:/docker-entrypoint-initdb.d
+      - ${PWD}/data/initdb:/docker-entrypoint-initdb.d
 
 volumes:
   dbdata:
 
 networks:
   frontend:
-    driver: bridge
   backend:
-    driver: bridge
